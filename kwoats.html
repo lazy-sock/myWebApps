@@ -73,12 +73,6 @@
             background-color: #333333;
             transition: width 200ms ease-out;
         }
-        .navbar:hover{
-            width: 16rem;
-        }
-        .navbar:hover .link-text{
-            display: inline-block;
-        }
         .navbar-nav{
             height: 100%;
             list-style: none;
@@ -188,6 +182,14 @@
                 display: none;
             }
         }
+        @media only screen and (min-width: 601px){
+            .navbar:hover{
+                width: 16rem;
+            }
+            .navbar:hover .link-text{
+                display: inline-block;
+            }
+        }
     </style>
 </head>
 <body>
@@ -195,9 +197,9 @@
         <nav class="navbar">
             <ul class="navbar-nav">
                 <li class="logo"><span class="logo-short">KKK</span><span class="logo-long"><h6>K</h6>luge <h6>K</h6>erlchen <h6>K</h6>lan</span></li>
-                <li class="nav-item"><a class="nav-link"><i class="fa-solid fa-palette"></i><span class="link-text">change Color</span></a></li>
-                <li class="nav-item"><a class="nav-link"><i class="fa-solid fa-magnifying-glass"></i><span class="link-text">Search</span></a></li>
-                <li class="nav-item"><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="nav-link"><i class="fa-brands fa-youtube"></i><span class="link-text">Youtube</span></a></li>
+                <li class="nav-item"><a class="nav-link"><i  style="padding: 0 6px;" class="fa-solid fa-palette"></i><span class="link-text">change Color</span></a></li>
+                <li class="nav-item"><a class="nav-link"><i  style="padding: 0 6px;" class="fa-solid fa-magnifying-glass"></i><span class="link-text">Search</span></a></li>
+                <li class="nav-item"><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="nav-link"><i style="padding: 0 3px;" class="fa-brands fa-youtube"></i><span class="link-text">Youtube</span></a></li>
                 <li class="nav-item"><a href="" class="nav-link"><i class="fa-solid fa-robot"></i><span class="link-text">Quotes</span></a></li>
                 <li class="arrow"><i class="fa-solid fa-arrow-right"></i></li>
             </ul>
