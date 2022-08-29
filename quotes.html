@@ -6,18 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>quote-Generator</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans">
+    <script src="https://kit.fontawesome.com/11a773415b.js" crossorigin="anonymous"></script>
     <style>
         :root{
-            font-size: 20px;
             font-family: 'Open Sans', Arial;
         }
         body{
             height: 95vh;
-            background-color: coral;
+            background-color: black;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+
+            transition: background-color 500ms ease-out;
         }
         .main-content{
             background-color: white;
@@ -26,7 +28,24 @@
             text-align: center;
             max-width: 50vw;
             min-width: 20vw;
+            font-size: 20px;
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
+            animation: pop-up 1000ms ease-out;
         }
+
+        @keyframes pop-up{
+            0%{
+                transform: scale(0.3);
+            }
+            70%{
+                transform: scale(1.1);
+            }
+            100%{
+                transform: scale(1.0);
+            }
+        }
+
         .quote{
 
         }
@@ -39,7 +58,7 @@
         #newQuote{
             display: inline-block;
             padding: 10px 15px;
-            font-size: 1rem;
+            font-size: 1.2rem;
             margin: auto;
             color: white;
             background-color: #222222;
@@ -51,9 +70,94 @@
         #newQuote:hover{
             transform: scale(1.1);
         }
+
+
+
+
+        /* navbar */
+        .navbar{
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            width: 8rem;
+            /*background-color: #222222;*/
+        }
+        .navbar > ul{
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .nav-item{
+            color: black;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 50%;
+            font-size: 50px;
+            padding: auto;
+            height: 60px;
+            width: 60px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            transition: box-shadow 300ms ease-out;
+            animation: pop-up 1000ms ease-out;
+        }
+        .nav-item:hover,
+        .nav-item:focus {
+            box-shadow: inset 0 -3.25em 0 0 white;
+        }
+
+                /* media queries */
+                @media only screen and (max-width: 600px){
+            .main-content{
+                max-width: unset;
+                min-width: unset;
+                width: 80vw;
+                padding: 30px;
+            }
+            .navbar{
+                bottom: 0;
+                top: auto;
+                width: 100vw;
+                height: 8rem;
+            }
+            .navbar > ul{
+                flex-direction: row;
+            }
+            .navbar > ul > .nav-item{
+                margin: 0 5vw;
+            }
+        }
+
+        #tag-select{
+            background-color: black;
+            color: white;
+            border: none;
+            text-align: center;
+            padding: 8px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li class="nav-item" onclick="changeColor()"><i class="fa-solid fa-brush"></i></li>
+                <li class="nav-item" onclick="search()"><i class="fa-solid fa-magnifying-glass"></i></li>
+            </ul>
+        </nav>
+    </header>
     <div class="main-content">
         <div class="quote">
             <p id="content">“Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.”</p>
@@ -67,18 +171,83 @@
     const author = document.getElementById('author');
     const button = document.getElementById('newQuote');
 
-    const api_url = 'https://api.quotable.io/random';
+    let api_url = 'https://api.quotable.io/random';
+    
 
     async function newQuote(){
+        if(selected !== 'Everything'){
+            api_url = 'https://api.quotable.io/random?tags=' + selected;
+        }
+        else{
+            api_url = 'https://api.quotable.io/random';
+        }
         const response = await fetch(api_url);
         const data =  await response.json();
         content.innerText = data.content;
         author.innerText = data.author;
+        console.log(api_url);
     }
-    button.addEventListener('click', function() {
-        newQuote();
-    })
 
+    button.addEventListener('click', () => newQuote())
+
+    /* random color */
+    function getRndInteger(min, max) { //  returns a random number between min and max (both included)
+        return Math.floor(Math.random() * (max - min + 1) ) + min;
+    }
+
+    function getRndColor_hsl(){
+        let random_h = getRndInteger(0,355);
+        let random_color = 'hsl(' + random_h + ',100%, 50%)'
+        return random_color;
+    }
+
+    function changeColor(){
+        let random_color = getRndColor_hsl();
+        document.querySelector('body').style.backgroundColor = random_color;
+    }
+    window.onload = function(){
+        changeColor();
+    }
+
+
+    // search
+    // list of tags
+    // ['famous-quotes', 'inspirational', 'wisdom', 'motivational', 'competition', 'friendship'];
+    let specified = false;
+    let input = document.createElement('select');
+    input.name = 'tag-select';
+    input.id = 'tag-select';
+    let option1 = document.createElement('option');
+    option1.innerText = 'Everything';
+    input.appendChild(option1);
+    let option2 = document.createElement('option');
+    option2.innerText = 'famous-quotes'
+    input.appendChild(option2);
+    let option3 = document.createElement('option');
+    option3.innerText = 'inspirational';
+    input.appendChild(option3);
+    let option4 = document.createElement('option');
+    option4.innerText = 'wisdom'
+    input.appendChild(option4);
+    let option5 = document.createElement('option');
+    option5.innerText = 'motivational';
+    input.appendChild(option5);
+    let option6 = document.createElement('option');
+    option6.innerText = 'competition'
+    input.appendChild(option6);
+    let option7 = document.createElement('option');
+    option7.innerText = 'friendship'
+    input.appendChild(option7);
+    
+    function search(){
+        content.innerText = '';
+        author.innerText = '';
+        content.appendChild(input);
+    }
+    let selected = 'Everything';
+    input.addEventListener('change', () => {
+        selected = document.getElementById(input.id).options[document.getElementById(input.id).selectedIndex].text;
+    })
     </script>
 </body>
 </html>
